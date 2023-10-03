@@ -54,23 +54,43 @@ startButton.addEventListener('click', () => {
         window.alert("Please choose a date in the future");
         return;
     }
+
     startButton.disabled = true;
+    document.querySelector('#datetime-picker').disabled = true;
+
     const timeDifference = selectedDate - currentDate;
 
     function updateTimer() {
-        const timeObj = convertMs(timeDifference);
-        daysElement.textContent = addLeadingZero(timeObj.days);
-        hoursElement.textContent = addLeadingZero(timeObj.hours);
-        minutesElement.textContent = addLeadingZero(timeObj.minutes);
-        secondsElement.textContent = addLeadingZero(timeObj.seconds);
-        timeDifference -= 1000;
+    const currentDate = new Date();
+    const timeDifference = selectedDate - currentDate; 
 
-        if (timeDifference < 0) {
-            clearInterval(countdownInterval);
-            startButton.disabled = false;
-        }
+    if (timeDifference < 0) {
+      clearInterval(countdownInterval);
+      startButton.disabled = false;
+      return;
     }
+
+    const timeObj = convertMs(timeDifference);
+    daysElement.textContent = addLeadingZero(timeObj.days);
+    hoursElement.textContent = addLeadingZero(timeObj.hours);
+    minutesElement.textContent = addLeadingZero(timeObj.minutes);
+    secondsElement.textContent = addLeadingZero(timeObj.seconds);
+    }
+  
     updateTimer();
     countdownInterval = setInterval(updateTimer, 1000);
 });
+
+const resetButton = document.querySelector('[data-reset]');
+resetButton.addEventListener('click', () => {
+    clearInterval(countdownInterval);
+    startButton.disabled = false;
+    document.querySelector('#datetime-picker').disabled = false;
+    document.querySelector('#datetime-picker').value = ''; 
+    daysElement.textContent = '00';
+    hoursElement.textContent = '00';
+    minutesElement.textContent = '00';
+    secondsElement.textContent = '00';
+});
+
 
